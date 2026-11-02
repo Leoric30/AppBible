@@ -1,0 +1,181 @@
+==============================================================================
+  BIBLIA RV1960 - INSTRUCCIONES PARA LEVANTAR Y PROBAR LA APP
+  React Native + Expo (Expo Go en iPhone)
+==============================================================================
+
+Ubicación del proyecto:  ~/Documents/biblia-app
+
+
+------------------------------------------------------------------------------
+1. REQUISITOS PREVIOS (instalar antes)
+------------------------------------------------------------------------------
+
+EN LA LAPTOP
+  [ ] Node.js versión LTS (20 o superior). Comprobar con:
+        node -v
+        npm -v
+      (En esta máquina ya está instalado Node v24.14.1 mediante nvm.)
+  [ ] Visual Studio Code u otro editor (opcional, solo para ver/editar código).
+  [ ] Git (opcional, para subir el proyecto a GitHub).
+
+  No hace falta instalar Expo CLI de forma global: se usa con "npx expo".
+  No hace falta Xcode ni una Mac: en iPhone se prueba con Expo Go.
+
+EN EL IPHONE
+  [ ] App "Expo Go" instalada desde la App Store (versión más reciente).
+      El proyecto usa Expo SDK 58; Expo Go debe soportar ese SDK. Si al abrir
+      la app aparece un error de "SDK incompatible", actualiza Expo Go.
+  [ ] Conexión a internet (la app consulta la API de bolls.life).
+
+RED
+  [ ] El iPhone y la laptop deben estar en la MISMA red Wi-Fi.
+      Si la red bloquea la conexión (escuela, red pública), usar el modo
+      túnel (ver paso 3, opción B).
+
+
+------------------------------------------------------------------------------
+2. INSTALAR LAS DEPENDENCIAS DEL PROYECTO
+------------------------------------------------------------------------------
+
+  cd ~/Documents/biblia-app
+  npm install
+
+  Esto descarga en node_modules/ las dependencias de package.json:
+    - expo              ~58.0.x
+    - expo-status-bar   ~58.0.x
+    - react             19.3.0
+    - react-native      0.88.0
+
+  (Si la carpeta node_modules ya existe, este paso es rápido. Si borraste
+   node_modules o clonaste el proyecto desde GitHub, es obligatorio.)
+
+  Opcional - verificar que todo esté en orden:
+    npx expo-doctor          -> debe decir "20/20 checks passed"
+
+
+------------------------------------------------------------------------------
+3. INICIAR EL SERVIDOR DE DESARROLLO
+------------------------------------------------------------------------------
+
+  OPCIÓN A (normal, misma Wi-Fi):
+    npx expo start
+
+  OPCIÓN B (si el iPhone no se conecta):
+    npx expo start --tunnel
+    (La primera vez puede pedir instalar @expo/ngrok; responde "Y".)
+
+  OPCIÓN C (si algo se ve raro o hay errores de caché):
+    npx expo start --clear
+
+  En la terminal aparecerá un código QR y la URL exp://...
+
+
+------------------------------------------------------------------------------
+4. ABRIR LA APP EN EL IPHONE
+------------------------------------------------------------------------------
+
+  1. Abre la app de CÁMARA del iPhone (no la de Expo Go).
+  2. Apunta al código QR de la terminal.
+  3. Toca la notificación "Abrir en Expo Go".
+  4. La primera carga tarda unos segundos (se descarga el bundle de JS).
+
+  Si iOS pregunta "Expo Go quiere buscar dispositivos en la red local",
+  toca PERMITIR. Si lo negaste antes: Ajustes > Expo Go > Red local > activar.
+
+  Fast Refresh: al guardar cambios en el código, la app se actualiza sola.
+  Para recargar manualmente: agita el iPhone > "Reload", o presiona "r" en
+  la terminal.
+
+  Detener el servidor: Ctrl + C en la terminal.
+
+
+------------------------------------------------------------------------------
+5. CÓMO USAR LA APP
+------------------------------------------------------------------------------
+
+  1. Al abrir aparece un indicador de carga y luego el formulario
+     (la lista de 66 libros se descarga de la API).
+  2. Arriba elige el modo:
+       - "Capítulo completo": libro + capítulo  -> lista de versículos.
+       - "Versículo único":   libro + capítulo + versículo -> tarjeta.
+  3. Toca "Selecciona un libro" para abrir la lista desplegable y elige uno.
+  4. Escribe el capítulo (y el versículo si aplica) con el teclado numérico.
+  5. Toca "Consultar".
+
+
+------------------------------------------------------------------------------
+6. LISTA DE PRUEBAS (para comprobar que todo está en orden)
+------------------------------------------------------------------------------
+
+  VALIDACIÓN DEL FORMULARIO
+  #  Qué haces                                      Resultado esperado
+  1  Consultar sin elegir libro                     "Selecciona un libro."
+  2  Juan, capítulo 22                              "Juan tiene 21 capítulos."
+  3  Juan, capítulo 0                               Mensaje de capítulo inválido
+  4  Versículo único sin escribir versículo         Mensaje de versículo inválido
+
+  MODO "VERSÍCULO ÚNICO"
+  5  Abrir el selector de libros                    66 libros, Génesis a Apocalipsis
+  6  Juan 3:16                                      Tarjeta con el texto real
+  7  Juan 3:99                                      Mensaje rojo: no se encontró
+  8  Modo avión activado y Consultar                Mensaje rojo; la app no se cierra
+
+  MODO "CAPÍTULO COMPLETO"
+  9  Juan 3                                         Lista de 36 versículos
+  10 Salmos 23                                      6 versículos sin "<br>"
+  11 Salmos 119                                     Lista larga que se recorre completa
+  12 Cambiar a "Versículo único"                    La lista desaparece, aparece campo Versículo
+  13 Regresar a "Capítulo completo"                 El formulario queda limpio
+
+  CHECKLIST FINAL
+  [ ] Ambos modos funcionan con al menos tres libros distintos.
+  [ ] Se ve el indicador de carga mientras llega la respuesta.
+  [ ] No hay mensajes rojos ni amarillos en la terminal de Expo.
+
+  Comprobar la API desde el navegador (opcional):
+    https://bolls.life/get-books/RV1960/
+    https://bolls.life/get-verse/RV1960/43/3/16/
+    https://bolls.life/get-text/RV1960/43/3/
+
+
+------------------------------------------------------------------------------
+7. PROBLEMAS FRECUENTES
+------------------------------------------------------------------------------
+
+  Síntoma                                 Solución
+  -------------------------------------   ------------------------------------
+  El QR no abre la app / se queda         Misma Wi-Fi en ambos, o usar
+  cargando                                "npx expo start --tunnel".
+                                          En Fedora, el firewall puede bloquear
+                                          el puerto 8081. Abrirlo con:
+                                            sudo firewall-cmd --add-port=8081/tcp
+                                          (temporal; agrega --permanent para
+                                           dejarlo fijo) o usar --tunnel.
+
+  "Project is incompatible with this      Actualizar Expo Go desde la App Store.
+  version of Expo Go"
+
+  "Network request failed" /              Revisar internet del iPhone; abrir
+  "No se pudo cargar la lista de libros"  https://bolls.life/get-books/RV1960/
+                                          en Safari.
+
+  "Unable to resolve module ./src/..."    Revisar ruta y mayúsculas del archivo.
+
+  "Unable to resolve expo-status-bar"     npx expo install expo-status-bar
+
+  Errores raros después de cambios        npx expo start --clear
+
+  node_modules dañado                     rm -rf node_modules && npm install
+
+
+------------------------------------------------------------------------------
+8. ENTREGA
+------------------------------------------------------------------------------
+
+  - Tomar captura de cada modo o grabar un video corto (< 1 min).
+  - Entregar el código SIN la carpeta node_modules (ya está en .gitignore):
+      git add .
+      git commit -m "Laboratorio React Native: app de versículos"
+    o comprimir la carpeta excluyendo node_modules:
+      zip -r biblia-app.zip biblia-app -x "biblia-app/node_modules/*"
+      (ejecutar desde ~/Documents)
