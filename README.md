@@ -7,10 +7,10 @@ Proyecto del *Laboratorio guiado* de la materia **Tecnologías de desarrollo de 
 ## Vista previa
 
 <p align="center">
-  <img src="images/AppBiblia_React.png" alt="Captura de la app BibleSearchUM mostrando Éxodo 20:8" width="300">
+  <img src="images/AppBiblia_Jetpack.jpeg" alt="Captura de la app Biblia RV1960 en modo Capítulo completo mostrando Éxodo 5" width="300">
 </p>
 
-<p align="center"><em>Versión final de la app: consulta de <strong>Éxodo 20:8</strong> en RV1960.</em></p>
+<p align="center"><em>Versión final de la app en iPhone (Expo Go): modo <strong>Capítulo completo</strong> consultando <strong>Éxodo 5</strong>.</em></p>
 
 ---
 
