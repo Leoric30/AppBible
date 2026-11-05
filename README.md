@@ -4,6 +4,14 @@ Aplicación móvil multiplataforma (iOS y Android) construida con **React Native
 
 Proyecto del *Laboratorio guiado* de la materia **Tecnologías de desarrollo de software** — tema: *Desarrollo de aplicaciones móviles no nativas con React Native*.
 
+## Vista previa
+
+<p align="center">
+  <img src="images/AppBiblia_React.png" alt="Captura de la app BibleSearchUM mostrando Éxodo 20:8" width="300">
+</p>
+
+<p align="center"><em>Versión final de la app: consulta de <strong>Éxodo 20:8</strong> en RV1960.</em></p>
+
 ---
 
 ## Características
@@ -42,6 +50,7 @@ biblia-app/
 ├── app.json                       Configuración de Expo (nombre, íconos)
 ├── package.json                   Dependencias y scripts
 ├── assets/                        Íconos e imágenes
+├── images/                        Capturas de pantalla para el README
 └── src/
     ├── api/
     │   └── biblia.js              Llamadas a la API con fetch
